@@ -1,6 +1,6 @@
 {
   "name": "@ubloimmo/front-util",
-  "description": "Utility types and functions for use in other libraries and satellites\n\nResources\n",
+  "description": "Utility types and functions for use in other libraries and satellites",
   "private": false,
   "version": "0.0.1",
   "module": "src/index.ts",
@@ -9,11 +9,11 @@
     "lib"
   ],
   "license": "MIT",
-  "author": "name <email>",
-  "homepage": "https://github.com/UbloImmo/<REPLACE ME>",
+  "author": "Jean-Nicolas Veigel <art.jnveigel@gmail.com>",
+  "homepage": "https://github.com/UbloImmo/front-util",
   "repository": {
     "type": "git",
-    "url": "https://github.com/UbloImmo/<REPLACE ME>"
+    "url": "https://github.com/UbloImmo/front-util"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.58.0",
@@ -32,7 +32,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": "<REPLACE ME>",
+    "build": "./src/scripts/build.sh",
     "incrementRevision": "bun src/scripts/incrementRevision.ts"
   },
   "type": "module"
