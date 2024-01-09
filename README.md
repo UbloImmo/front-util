@@ -1,87 +1,85 @@
-# @ubloimmo/front-lib-boilerplate
+# @ubloimmo/front-util
 
-Template repository to create Internal library and private NPM package.
+A collection of utility types and functions
 
-## Prerequisites
-- [Bun](https://bun.sh)
+## Exported values
 
-## Includes
+### Utility types
 
-### Github actions
-This template comes with two pre-configured github workflows to make your life easier:
+*A bunch of generics for usage in various cases. All documented using jsdoc.*
 
-- publish.yml :
-  - Increments the package revision
-  - Builds the package using the `bun run build`
-  - Publishes it to the NPM Registry
-  - Commits the build and new version to `main`
-  - Triggers a release
-- release.yml :
-  - Bundles the build directory (`/lib`) in a zip file based on the current version
-  - Authors a new github release
+#### Function types
 
-### Typescript
+- `GenericFn`
+- `VoidFn`
+- `AsyncFn`
+- `MaybeAsyncFn`
+- `Predicate`
 
-Bun comes with typescript support out of the box.
+#### Primitives
 
-Some basic utility types are also included.
+- `Primitives`
+- `NullishPritives`
 
-### Utils
+#### Union types
 
-- Config validator
-- Logger
+- `Nullable<T>`
+- `Optional<T>`
+- `Nullish<T>`
+- `NonNullable<T>`
+- `NonOptional<T>`
+- `NonNullish<T>`
 
-## Getting started
+#### Object generics
 
-1. Fork this repository or select it as a starting template when creating a new repository.
+- `DeepRequired`
+- `DeepNullish`
+- `DeepNonNullable`
+- `DeepNonOptional`
+- `DeepNonNullish`
 
+### Utility functions
 
-2. Go to your new repository's secrets settings and add the following values.
+*Some commonly used utility functions*
 
-- `NPM_TOKEN`: Personal access token generated in your [account settings](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+#### Predicates
 
-3. Clone and navigate to your new repository.
+*Functions that verify the type of a value at runtime. Type safe.*
 
-```bash
-git clone <my repository>
-cd <my repository name>  
-```
+- `isNumber()`
+- `isString()`
+- `isBoolean()`
+- `isObject()`
+- `isArray()`
+- `isNull()`
+- `isUndefined()`
+- `isNullish()`
 
-4. Edit `package.json` with your package information.
+#### Logger
 
-```bash
-# nano
-nano package.json
-# neovim
-nvim package.json
-# vscode
-code package.json
-# webstorm
-webstorm package.json
-```
-- `name`: your package's name
-- `description`: your package description
-- `author`: your name and npm email
-- `homepage`: your repository's URL
-- `repository.url`: your repository's URL
-- `scripts.build`: a script to build your package before publishing it
+- `Logger()` factory
 
-5. **Start writing your package !** :rocket:
+## Currently missing
 
-## Publishing your package
+Functions and type declarations that have yet to be added to this lib
 
-### Before publishing your package
+### Product-wide scalars
 
-Make sure to replace this `README.md` file with documentation about your package.
+- [ ] `Address`
+- [ ] `Currency`
+- [ ] `UUID`
 
-### Triggering the publishing workflow
+### Common transformers & normalizers
 
-Once you're satisfied with the current state of your package and have committed it to / merged it onto the `main` branch, you'll want to publish it.
-
-To publish your package to the NPM registry:
-1. Navigate to the *Actions* tab of your repository
-2. Select `NPM Publish` in the side menu
-3. Click on `Run workflow` in the dark blue banner
-4. Wait for it to finish
-
-**Note**: Upon successful publishing to NPM, the `Relase create` workflow will automatically run.
+- [ ] Currency parsers & transformers
+  - [ ] Integer to double precision float parser
+  - [ ] Double precision float to string formatter
+- [ ] Address parsers & formatter
+- [ ] Date parsers & formatters
+- [ ] String transformers
+  - [ ] To Pascal case
+  - [ ] To Kebab case
+  - [ ] Common regular expressions
+- [ ] Object parsers, validators & transformers
+  - [ ] Object value / key transformer
+  - [ ] Object merge
