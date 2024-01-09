@@ -1,5 +1,7 @@
 # @ubloimmo/front-util
 
+[![npm version](https://badge.fury.io/js/@ubloimmo%2Ffront-util.svg)](https://badge.fury.io/js/@ubloimmo%2Ffront-util)
+
 A collection of utility types and functions
 
 ## Exported values
