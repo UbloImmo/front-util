@@ -1,9 +1,9 @@
 # GitHub action that
-# - Increment package version revision (0.1.2 => major.minor.revision)
+# - Increments package version revision (0.1.2 => major.minor.revision)
 # - Builds an NPM package
 # - Publishes it to NPM
 # - Commits the build to the "build" branch
-# - Call release workflow
+# - Calls release workflow
 # Runs
 # - on each commit to main with a new version
 # - manually in the "actions" tab of the repository
