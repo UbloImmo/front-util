@@ -79,7 +79,7 @@ jobs:
 
       - name: Build package
         id: package_build
-        run: bun run build
+        run: ./src/scripts/build.sh
 
       - name: Publish package
         id: package_publish
