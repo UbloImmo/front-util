@@ -5,5 +5,5 @@ if [ -d ./lib ]; then rm -rf ./lib; fi
 cp -R ./src ./lib
 
 # remove the scripts and test directories from lib
-rm -rf .lib/scripts
-rm -rf .lib/tests
+rm -rf ./lib/scripts
+rm -rf ./lib/tests
