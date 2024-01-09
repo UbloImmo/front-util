@@ -37,7 +37,10 @@ export type GenericFn<
  * };
  * const doNothing: VoidFn = () => {};
  */
-export type VoidFn<TArguments extends FnArguments = []> = GenericFn<TArguments, void>;
+export type VoidFn<TArguments extends FnArguments = []> = GenericFn<
+  TArguments,
+  void
+>;
 
 /**
  * Utility type to construct async functions have to return promises.

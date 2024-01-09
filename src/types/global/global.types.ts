@@ -85,22 +85,32 @@ export type Primitives = string | number | boolean | object;
 
 export type NullishPrimitives = Nullish<Primitives>;
 
-export type DeepRequired<T> = T extends object ? {
-  [TKey in keyof T]-?: T[TKey];
-} : T;
+export type DeepRequired<T> = T extends object
+  ? {
+      [TKey in keyof T]-?: T[TKey];
+    }
+  : T;
 
-export type DeepNullish<T> = T extends object ? {
-  [TKey in keyof T]: DeepNullish<T[TKey]>
-} : Nullish<T>
+export type DeepNullish<T> = T extends object
+  ? {
+      [TKey in keyof T]: DeepNullish<T[TKey]>;
+    }
+  : Nullish<T>;
 
-export type DeepNonNullable<T> = T extends object ? {
-  [TKey in keyof T]: DeepNonNullable<T[TKey]>;
-} : NonNullable<T>
+export type DeepNonNullable<T> = T extends object
+  ? {
+      [TKey in keyof T]: DeepNonNullable<T[TKey]>;
+    }
+  : NonNullable<T>;
 
-export type DeepNonOptional<T> = T extends object ? {
-  [TKey in keyof T]: DeepNonOptional<T[TKey]>;
-} : NonOptional<T>
+export type DeepNonOptional<T> = T extends object
+  ? {
+      [TKey in keyof T]: DeepNonOptional<T[TKey]>;
+    }
+  : NonOptional<T>;
 
-export type DeepNonNullish<T> = T extends object ? DeepRequired<{
-  [TKey in keyof T]: DeepNonNullish<T[TKey]>;
-}> : NonNullish<T>;
+export type DeepNonNullish<T> = T extends object
+  ? DeepRequired<{
+      [TKey in keyof T]: DeepNonNullish<T[TKey]>;
+    }>
+  : NonNullish<T>;

@@ -1,5 +1,3 @@
-import { NullishPrimitives } from "@/types";
-
 /**
  * Primitive test values to use in test files
  */
@@ -12,8 +10,8 @@ export const defaultTestValues = {
   undefined: undefined,
   array: [],
   object: {
-    key: "object value"
-  }
+    key: "object value",
+  },
 } as const;
 
 export type TestValueKey = keyof typeof defaultTestValues;

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-export default {
+module.exports = {
   env: {
     browser: true,
     es2021: true,
@@ -33,7 +33,7 @@ export default {
       },
     ],
   },
-  plugins: ["react", "react-hooks", "@typescript-eslint", "local-rules"],
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
   ignorePatterns: ["**/dist/*.js"],
   rules: {
     // generic
@@ -54,12 +54,13 @@ export default {
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unused-expressions": "error",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/ban-ts-comment": "warn",
+    "prefer-const": "warn",
   },
 };

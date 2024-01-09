@@ -1,28 +1,28 @@
 import { Logger } from "@/utils/log.utils";
 
-const PACKAGE_JSON_PATH = "../../package.json"
+const PACKAGE_JSON_PATH = "../../package.json";
 
 const logger = Logger({
   throwOnError: true,
   warningsAsErrors: true,
   spacing: 2,
-})
+});
 
 const incrementRevision = (currentVersion: string) => {
-  let [major, minor, revision] = currentVersion
-    .split('.')
+  const [major, minor, revision] = currentVersion
+    .split("")
     .map((num) => parseInt(num));
-  revision++
-  return [major, minor, revision].map(String).join('.');
-}
+  const bumpedRevision = revision + 1;
+  return [major, minor, bumpedRevision].map(String).join(".");
+};
 
 const getPackageJSON = async () => {
-  return await import(PACKAGE_JSON_PATH)
-}
+  return await import(PACKAGE_JSON_PATH);
+};
 
 export const writeFile = async (path: string, data: string) => {
-  await Bun.write(path, data)
-}
+  await Bun.write(path, data);
+};
 
 const incrementVersion = async () => {
   try {
@@ -44,10 +44,9 @@ const incrementVersion = async () => {
     );
 
     return newVersion;
+  } catch (e) {
+    logger.error(e);
   }
-  catch(e) {
-    logger.error(e)
-  }
-}
+};
 
-await incrementVersion()
+await incrementVersion();

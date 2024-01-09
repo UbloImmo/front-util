@@ -1,2 +1,2 @@
-export * from "./function"
-export * from "./global"
+export * from "./function";
+export * from "./global";
