@@ -1,0 +1,60 @@
+name: "Run tests"
+
+on:
+  pull_request: null
+  workflow_dispatch: null
+  workflow_call: null
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        id: bun_setup
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Check bun
+        id: bun_check
+        run: |
+          which bun
+          bun --version
+
+      - name: Setup node
+        id: node_setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check node
+        id: node_check
+        run: |
+          which node
+          node --version
+          which npm
+          npm --version
+
+      - name: Install dependencies
+        id: install_dependencies
+        run: bun install
+
+      - name: Test lint (eslint / prettier)
+        id: test_lint
+        run: bun run test:lint
+
+      - name: Test types (tsc)
+        id: test_types
+        run: bun run test:types
+
+      - name: Test unit
+        id: test_unit
+        run: bun run test:unit
