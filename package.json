@@ -1,6 +1,6 @@
 {
-  "name": "@ubloimmo/<REPLACE ME>",
-  "description": "<REPLACE ME>",
+  "name": "@ubloimmo/front-util",
+  "description": "Utility types and functions for use in other libraries and satellites\n\nResources\n",
   "private": false,
   "version": "0.0.1",
   "module": "src/index.ts",

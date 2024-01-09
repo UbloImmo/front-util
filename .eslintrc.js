@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-module.exports = {
+export default {
   env: {
     browser: true,
     es2021: true,
