@@ -25,8 +25,9 @@ export const isBoolean = ((value) => typeof value === "boolean") as Predicate<bo
  * Predicate typescript function that checks whether the value corresponds to an object
  * @param {unknown} value unknown value to check
  * @returns {boolean} true if the value corresponds to an object
+ * @remarks null check is needed since typeof null === "object"
  */
-export const isObject = ((value) => typeof value === "object") as Predicate<object>;
+export const isObject = ((value) => !isNull(value) && typeof value === "object") as Predicate<object>;
 
 /**
  * Predicate typescript function that checks whether the value corresponds to an array
