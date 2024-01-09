@@ -4,6 +4,42 @@
 
 A collection of utility types and functions
 
+## Getting stated
+
+### Installation
+
+Install the package with your manager of choice.
+
+```shell
+# npm
+npm install @ubloimmo/front-util
+# yarn
+yarn add @ubloimmo/front-util
+# bun
+bun add @ubloimmo/front-util
+```
+
+### Usage
+
+Import an utility type...
+
+```typescript jsx
+import type { GenericFn } from "@ubloimmo/front-util";
+
+const add: GenericFn<[number, number], number> = (a, b) => a + b;
+```
+
+...or a function.
+
+```typescript jsx
+import { isNumber, Nullish } from "@ubloimmo/front-util";
+
+const isMoreThanTen = (a: Nullish<number>) => {
+  if (isNumber(a)) return a > 10;
+  return false;
+}
+```
+
 ## Exported values
 
 ### Utility types
