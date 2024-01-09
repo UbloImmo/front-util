@@ -24,15 +24,20 @@ bun add @ubloimmo/front-util
 Import an utility type...
 
 ```typescript jsx
-import type { GenericFn } from "@ubloimmo/front-util";
+import type { GenericFn, Nullish } from "@ubloimmo/front-util";
 
-const add: GenericFn<[number, number], number> = (a, b) => a + b;
+const addTwoNumbers: GenericFn<[number, number], number> = (a, b) => a + b;
+
+const joinStrings: GenericFn<string[], string> = (...strings) => {
+  return strings.join();
+}
 ```
 
 ...or a function.
 
 ```typescript jsx
-import { isNumber, Nullish } from "@ubloimmo/front-util";
+import type { Nullish } from "@ubloimmo/front-util";
+import { isNumber } from "@ubloimmo/front-util";
 
 const isMoreThanTen = (a: Nullish<number>) => {
   if (isNumber(a)) return a > 10;
