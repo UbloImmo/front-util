@@ -75,7 +75,7 @@ jobs:
           bun run incrementRevision
           
           version=$(echo $(<./package.json) | jq ".version")
-          echo "version=$version" >> $GITHUB_VERSION
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Build package
         id: package_build

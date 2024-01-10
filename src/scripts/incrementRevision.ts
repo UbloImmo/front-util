@@ -10,7 +10,7 @@ const logger = Logger({
 
 const incrementRevision = (currentVersion: string) => {
   const [major, minor, revision] = currentVersion
-    .split("")
+    .split(".")
     .map((num) => parseInt(num));
   const bumpedRevision = revision + 1;
   return [major, minor, bumpedRevision].map(String).join(".");
