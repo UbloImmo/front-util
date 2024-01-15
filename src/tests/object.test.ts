@@ -2,23 +2,22 @@ import { describe, expect, test } from "bun:test";
 import {
   defaultTestValues,
   TestValueKey,
-  TestValues,
+  TestValue,
 } from "@/tests/test.defaults";
 import { transformObject } from "@/functions";
 
-type ItemTransformer = Parameters<
-  typeof transformObject<TestValueKey, TestValues[TestValueKey]>
->[1];
-
 const testObjectTransformer = (
   label: string,
-  itemTransformer: ItemTransformer
+  itemTransformer: (value: TestValue, key: TestValueKey) => unknown
 ) => {
   test(label, () => {
     const transformed = transformObject(defaultTestValues, itemTransformer);
     for (const key in defaultTestValues) {
-      expect(transformed[key]).toBe(
-        itemTransformer(defaultTestValues[key], key)
+      // makes ts happy, not sure why
+      const defaultKey = key as TestValueKey;
+      const transformedKey = key as keyof typeof transformed;
+      expect(transformed[transformedKey]).toBe(
+        itemTransformer(defaultTestValues[key as TestValueKey], defaultKey)
       );
     }
   });

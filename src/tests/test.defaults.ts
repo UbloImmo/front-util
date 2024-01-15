@@ -14,6 +14,8 @@ export const defaultTestValues = {
   },
 } as const;
 
-export type TestValues = typeof defaultTestValues;
+export type TestObject = typeof defaultTestValues;
 
-export type TestValueKey = keyof TestValues;
+export type TestValueKey = keyof TestObject;
+
+export type TestValue = TestObject[TestValueKey];
