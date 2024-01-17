@@ -1,21 +1,38 @@
 /**
- * Transforms every value of a given object and returns it
- * @param object - The source object to transform
- * @param itemTransformer - Callback function that transforms a single object value based on its value & key
- * @return A new object all its values transformes through the itemTransformer
+ * Transforms an object by applying a given item transformer function to each value,
+ * and an optional key transformer function to each key.
+ *
+ * @template {Record<string, unknown>} TObj
+ * @param {TObj} object - The object to be transformed.
+ * @param {function} itemTransformer - The function that transforms each item value.
+ * @param {function} [keyTransformer] - The optional function that transforms each key.
+ * @returns {object} - The transformed object.
  */
 export const transformObject = <
-  TObjectKey extends string | number,
-  TBaseItem,
-  TTransformedItem
+  TObj extends Record<string, unknown>,
+  TTransformedKey extends string = keyof TObj & string,
+  TTransformedItem = TObj[keyof TObj & string]
 >(
-  object: Record<TObjectKey, TBaseItem>,
-  itemTransformer: (item: TBaseItem, key: TObjectKey) => TTransformedItem
-): Record<TObjectKey, TTransformedItem> => {
-  return Object.fromEntries(
-    Object.entries(object).map(([key, value]) => [
-      key,
-      itemTransformer(value as TBaseItem, key as TObjectKey),
-    ])
-  ) as Record<TObjectKey, TTransformedItem>;
+  object: TObj,
+  itemTransformer: (item: TObj[keyof TObj & string]) => TTransformedItem,
+  keyTransformer?: (key: keyof TObj & string) => TTransformedKey
+): typeof keyTransformer extends undefined
+  ? {
+      [k in keyof TObj]: TTransformedItem;
+    }
+  : {
+      [Key in TTransformedKey]: TTransformedItem;
+    } => {
+  const objectEntries = Object.entries(object) as [
+    keyof TObj & string,
+    TObj[keyof TObj & string]
+  ][];
+  const transformedEntries = objectEntries.map(([key, value]) => [
+    keyTransformer ? keyTransformer(key) : key,
+    itemTransformer(value),
+  ]);
+  if (keyTransformer) {
+    return Object.fromEntries(transformedEntries);
+  }
+  return Object.fromEntries(transformedEntries);
 };

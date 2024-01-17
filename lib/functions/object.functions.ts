@@ -18,13 +18,13 @@ export const transformObject = <
   keyTransformer?: (key: keyof TObj & string) => TTransformedKey
 ): typeof keyTransformer extends undefined
   ? {
-    [k in keyof TObj]: TTransformedItem;
-  }
+      [k in keyof TObj]: TTransformedItem;
+    }
   : {
-    [Key in TTransformedKey]: TTransformedItem;
-  } => {
+      [Key in TTransformedKey]: TTransformedItem;
+    } => {
   const objectEntries = Object.entries(object) as [
-      keyof TObj & string,
+    keyof TObj & string,
     TObj[keyof TObj & string]
   ][];
   const transformedEntries = objectEntries.map(([key, value]) => [
