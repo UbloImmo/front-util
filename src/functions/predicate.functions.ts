@@ -1,4 +1,4 @@
-import { Predicate } from "@/types/function/predicate.types";
+import { Predicate } from "../types";
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a number

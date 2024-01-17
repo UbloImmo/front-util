@@ -1,4 +1,4 @@
-import { DeepNonNullish } from "../types/global/global.types";
+import { DeepNonNullish } from "../types";
 import * as util from "util";
 
 type LoggerMode = "auto" | "simple";

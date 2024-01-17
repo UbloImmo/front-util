@@ -1,4 +1,4 @@
-import { NullishPrimitives } from "@/types/global/global.types";
+import { NullishPrimitives } from "../global";
 
 export type Predicate<T extends NullishPrimitives> = (
   value: unknown

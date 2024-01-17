@@ -1,7 +1,7 @@
 import * as predicates from "../functions/predicate.functions";
 import { describe, expect, test } from "bun:test";
-import { NullishPrimitives, Predicate } from "@/types";
-import { defaultTestValues, TestValueKey } from "@/tests/test.defaults";
+import { defaultTestValues, TestValueKey } from "./test.defaults";
+import { NullishPrimitives, Predicate } from "../types";
 
 /**
  * Generates a test suite for a given predicate function.

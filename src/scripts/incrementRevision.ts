@@ -1,4 +1,4 @@
-import { Logger } from "@/utils/log.utils";
+import { Logger } from "../utils";
 
 const PACKAGE_JSON_PATH = "../../package.json";
 
