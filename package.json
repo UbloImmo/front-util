@@ -3,7 +3,7 @@
   "description": "Utility types and functions for use in other libraries and satellites",
   "private": false,
   "version": "0.0.7",
-  "module": "src/index.ts",
+  "module": "lib/index.ts",
   "main": "lib/index.ts",
   "files": [
     "lib"
