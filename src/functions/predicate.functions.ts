@@ -1,4 +1,4 @@
-import { Predicate } from "../types";
+import { MaybeAsyncFn, Predicate } from "../types";
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a number
@@ -6,7 +6,7 @@ import { Predicate } from "../types";
  * @returns {boolean} true if the value corresponds to a number
  */
 export const isNumber = ((value: unknown) =>
-  typeof value === "number") as Predicate<number>;
+  typeof value === "number" && !isNaN(value)) as Predicate<number>;
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a string
@@ -63,3 +63,11 @@ export const isUndefined = ((value: unknown) =>
  */
 export const isNullish = ((value: unknown) =>
   isNull(value) || isUndefined(value)) as Predicate<null | undefined>;
+
+/**
+ * Predicate typescript function that checks whether the value is a function
+ * @param {unknown} value unknown value to check
+ * @returns {boolean} true if the value is a function;
+ */
+export const isFunction = ((value: unknown) =>
+  typeof value === "function") as Predicate<MaybeAsyncFn>;
