@@ -1,4 +1,4 @@
-import { Predicate } from "../types";
+import { Predicate, GenericFn } from "../types";
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a number
@@ -6,7 +6,7 @@ import { Predicate } from "../types";
  * @returns {boolean} true if the value corresponds to a number
  */
 export const isNumber = ((value: unknown) =>
-  typeof value === "number") as Predicate<number>;
+  typeof value === "number" && !isNaN(value)) as Predicate<number>;
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a string
@@ -31,7 +31,9 @@ export const isBoolean = ((value: unknown) =>
  * @remarks null check is needed since typeof null === "object"
  */
 export const isObject = ((value: unknown) =>
-  !isNull(value) && typeof value === "object") as Predicate<object>;
+  !isFunction(value) &&
+  !isNull(value) &&
+  typeof value === "object") as Predicate<object>;
 
 /**
  * Predicate typescript function that checks whether the value corresponds to an array
@@ -63,3 +65,13 @@ export const isUndefined = ((value: unknown) =>
  */
 export const isNullish = ((value: unknown) =>
   isNull(value) || isUndefined(value)) as Predicate<null | undefined>;
+
+/**
+ * Predicate typescript function that checks whether the value is a function
+ * @param {unknown} value unknown value to check
+ * @returns {boolean} true if the value is a function;
+ */
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const isFunction = <TFn extends Function = GenericFn>(
+  value: GenericFn | unknown
+): value is TFn => typeof value === "function";
