@@ -7,10 +7,10 @@
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "composite": true,
+    "verbatimModuleSyntax": false,
     "downlevelIteration": true,
     "resolveJsonModule": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "esModuleInterop": false,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
@@ -22,5 +22,5 @@
       "bun-types" // add Bun global
     ]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./src/tests"]
 }

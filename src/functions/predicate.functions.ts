@@ -1,4 +1,4 @@
-import { MaybeAsyncFn, Predicate } from "../types";
+import { MaybeAsyncFn, Predicate, GenericFn } from "../types";
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a number
@@ -31,7 +31,9 @@ export const isBoolean = ((value: unknown) =>
  * @remarks null check is needed since typeof null === "object"
  */
 export const isObject = ((value: unknown) =>
-  !isNull(value) && typeof value === "object") as Predicate<object>;
+  !isFunction(value) &&
+  !isNull(value) &&
+  typeof value === "object") as Predicate<object>;
 
 /**
  * Predicate typescript function that checks whether the value corresponds to an array
@@ -69,5 +71,7 @@ export const isNullish = ((value: unknown) =>
  * @param {unknown} value unknown value to check
  * @returns {boolean} true if the value is a function;
  */
-export const isFunction = ((value: unknown) =>
-  typeof value === "function") as Predicate<MaybeAsyncFn>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const isFunction = <TFn extends Function = GenericFn>(
+  value: GenericFn | unknown
+): value is TFn => typeof value === "function";
