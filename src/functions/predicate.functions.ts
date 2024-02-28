@@ -1,4 +1,4 @@
-import { MaybeAsyncFn, Predicate, GenericFn } from "../types";
+import { Predicate, GenericFn } from "../types";
 
 /**
  * Predicate typescript function that checks whether the value corresponds to a number
