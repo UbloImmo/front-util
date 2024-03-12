@@ -2,10 +2,12 @@
   "name": "@ubloimmo/front-util",
   "description": "Utility types and functions for use in other libraries and satellites",
   "private": false,
-  "version": "0.0.8",
+  "version": "0.0.9",
   "module": "lib/index.ts",
   "main": "lib/index.ts",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "license": "MIT",
   "author": "Jean-Nicolas Veigel <art.jnveigel@gmail.com>",
   "homepage": "https://github.com/UbloImmo/front-util",
