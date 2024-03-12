@@ -92,7 +92,7 @@ jobs:
       - name: Git commit & push `main`
         id: git_push_main
         run: |
-          message="build: ${{ steps.increment_revision.outputs.version }}
+          message="build: ${{ steps.increment_revision.outputs.version }}"
           git add .
           git commit -m "$message"
           git push
