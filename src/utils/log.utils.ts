@@ -1,5 +1,4 @@
 import { DeepNonNullish } from "../types";
-import * as util from "util";
 
 type LoggerMode = "auto" | "simple";
 type LoggerSeverity = "info" | "error" | "warn" | "log" | "debug";
@@ -90,7 +89,7 @@ const defaultConfig: DeepNonNullish<LoggerConfig> = {
   spacing: 0,
 } as const;
 
-type LoggerFn = (message: unknown, name?: string) => void;
+export type LoggerFn = (message: unknown, name?: string) => void;
 
 export type Logger = {
   config: DeepNonNullish<LoggerConfig>;
@@ -129,12 +128,7 @@ export function Logger(initialConfig?: LoggerConfig): Logger {
       ? `[${config.prefixes[severity].replaceAll(":", "").trim()}] ${name}:`
       : config.prefixes[severity];
     const spacing = Array(config.spacing).fill("\n").join("");
-    if (config.mode === "auto" && typeof message === "object") {
-      logFn(prefix);
-      util.inspect(message);
-    } else {
-      logFn(prefix, message);
-    }
+    logFn(prefix, message);
     const typeInfo = Array.isArray(message)
       ? `array[${message.length}]`
       : typeof message;
