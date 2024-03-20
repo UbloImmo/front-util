@@ -4,6 +4,8 @@
 export const defaultTestValues = {
   string: "hello world",
   number: 78946,
+  int: 456,
+  float: 7893.67,
   true: true,
   false: false,
   null: null,

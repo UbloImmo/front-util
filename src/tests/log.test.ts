@@ -1,15 +1,53 @@
-import { describe, it, expect, mock } from "bun:test";
-import {
-  isFunction,
-  objectEntries,
-  objectKeys,
-  transformObject,
-} from "../functions";
-import { Logger, LoggerFn } from "../utils";
+import { describe, it, expect, mock, beforeEach } from "bun:test";
+import { isObject, objectKeys, transformObject } from "../functions";
+import { Logger, LoggerConfig } from "../utils";
 
-// mock global console object to list to calls
-// eslint-disable-next-line no-console
-global.console = transformObject({ ...console }, (method) => mock(method));
+const methodNames = ["log", "info", "warn", "error", "debug"] as const;
+type LogMethodName = (typeof methodNames)[number];
+const testLoggerMethod = (
+  methodName: LogMethodName,
+  nativeMethodName?: LogMethodName,
+  flags?: LoggerConfig
+) => {
+  // init logger
+  const logger = Logger(flags);
+  describe(`${methodName} method`, () => {
+    const method = logger[methodName];
+    it("shoud be a function", () => {
+      expect(method).toBeDefined();
+      expect(method).toBeFunction();
+    });
+    const noCall =
+      (flags?.hideDebug && methodName === "debug") ||
+      (flags?.hideLogs && methodName === "log");
+    const throws = flags?.throwOnError && methodName === "error";
+    const flagStr = isObject(flags)
+      ? `with flags ${objectKeys(flags).join(" ")}`
+      : "by default";
+    it(`should ${!throws ? "not " : ""}throw with ${flagStr}`, () => {
+      // mock global console object to list to calls
+      global.console[nativeMethodName ?? methodName] = mock(() => {});
+      if (throws) {
+        expect(() => method(methodName)).toThrow();
+      } else {
+        expect(() => method(methodName)).not.toThrow();
+      }
+    });
+    it(`should ${
+      noCall ? "not " : ""
+    }call console.${methodName} ${flagStr}`, () => {
+      if (noCall) {
+        expect(
+          global.console[nativeMethodName ?? methodName]
+        ).not.toHaveBeenCalled();
+      } else {
+        expect(
+          global.console[nativeMethodName ?? methodName]
+        ).toHaveBeenCalled();
+      }
+    });
+  });
+};
 
 describe("logger", () => {
   describe("init", () => {
@@ -24,29 +62,10 @@ describe("logger", () => {
   });
 
   describe("usage", () => {
-    it("should not throw when calling methods", () => {
-      const logger = Logger();
-      objectEntries(logger).forEach(([methodName, method]) => {
-        if (!isFunction<LoggerFn>(method)) return;
-        it(methodName, () => {
-          expect(method).toBeDefined();
-          expect(method).toBeFunction();
-          expect(method).not.toThrow();
-        });
-      });
-    });
-
-    it("should bind its methods to console calls", () => {
-      const logger = Logger({ mode: "simple" });
-      objectKeys(logger).forEach((methodName) => {
-        if (methodName === "config") return;
-        it(methodName, () => {
-          expect(logger[methodName]).toBeDefined();
-          expect(logger[methodName]).toBeFunction();
-          expect(() => logger[methodName]("test message")).not.toThrow();
-          expect(global.console[methodName]).toHaveBeenCalled();
-        });
-      });
-    });
+    methodNames.forEach((methodName) => testLoggerMethod(methodName));
+    testLoggerMethod("warn", "error", { warningsAsErrors: true });
+    testLoggerMethod("error", "error", { throwOnError: true });
+    testLoggerMethod("debug", "debug", { hideDebug: true });
+    testLoggerMethod("log", "log", { hideLogs: true });
   });
 });

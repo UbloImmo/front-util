@@ -34,7 +34,9 @@ const testPredicate = (
 };
 
 describe("predicates", () => {
-  testPredicate("isNumber", "number");
+  testPredicate("isNumber", ["number", "float", "int"]);
+  testPredicate("isInt", ["int", "number"]);
+  testPredicate("isFloat", "float");
   testPredicate("isString", "string");
   testPredicate("isBoolean", ["true", "false"]);
   testPredicate("isObject", ["object", "array"]);

@@ -9,6 +9,22 @@ export const isNumber = ((value: unknown) =>
   typeof value === "number" && !isNaN(value)) as Predicate<number>;
 
 /**
+ * Predicate typescript function that checks whether the value corresponds to an integer
+ * @param {unknown} value unknown value to check
+ * @returns {boolean} true if the value corresponds to an integer
+ */
+export const isInt = ((value: unknown) =>
+  isNumber(value) && value % 1 === 0) as Predicate<number>;
+
+/**
+ * Predicate typescript function that checks whether the value corresponds to a float
+ * @param {unknown} value unknown value to check
+ * @returns {boolean} true if the value corresponds to a float
+ */
+export const isFloat = ((value: unknown) =>
+  isNumber(value) && !isInt(value)) as Predicate<number>;
+
+/**
  * Predicate typescript function that checks whether the value corresponds to a string
  * @param {unknown} value unknown value to check
  * @returns {boolean} true if the value corresponds to a string
