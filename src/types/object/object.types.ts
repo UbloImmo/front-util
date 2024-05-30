@@ -1,5 +1,11 @@
-import type { UnionToIntersection } from "..";
-import type { Nullish, NonOptional, NonNullish } from "../global/global.types";
+import type {
+  UnionToIntersection,
+  Nullish,
+  NonOptional,
+  NonNullish,
+  Nullable,
+  Optional,
+} from "..";
 import type { DeepKeyOf } from "./keys.types";
 
 export type DeepRequired<T> = T extends object
@@ -20,23 +26,35 @@ export type DeepNullish<T> = T extends object
     }
   : Nullish<T>;
 
+export type DeepNonNullish<T> = T extends object
+  ? DeepRequired<{
+      [TKey in keyof T]: DeepNonNullish<T[TKey]>;
+    }>
+  : NonNullish<T>;
+
+export type DeepNullable<T> = T extends object
+  ? {
+      [TKey in keyof T]: DeepNullable<T[TKey]>;
+    }
+  : Nullable<T>;
+
 export type DeepNonNullable<T> = T extends object
   ? {
       [TKey in keyof T]: DeepNonNullable<T[TKey]>;
     }
   : NonNullable<T>;
 
+export type DeepOptional<T> = T extends object
+  ? {
+      [TKey in keyof T]: DeepOptional<T[TKey]>;
+    }
+  : Optional<T>;
+
 export type DeepNonOptional<T> = T extends object
   ? {
       [TKey in keyof T]: DeepNonOptional<T[TKey]>;
     }
   : NonOptional<T>;
-
-export type DeepNonNullish<T> = T extends object
-  ? DeepRequired<{
-      [TKey in keyof T]: DeepNonNullish<T[TKey]>;
-    }>
-  : NonNullish<T>;
 
 /**
  * Picks a deep slice of an object
