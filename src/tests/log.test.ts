@@ -1,5 +1,5 @@
-import { describe, it, expect, mock, beforeEach } from "bun:test";
-import { isObject, objectKeys, transformObject } from "../functions";
+import { describe, it, expect, mock } from "bun:test";
+import { isObject, objectKeys } from "../functions";
 import { Logger, LoggerConfig } from "../utils";
 
 const methodNames = ["log", "info", "warn", "error", "debug"] as const;
