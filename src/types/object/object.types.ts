@@ -88,6 +88,21 @@ export type DeepPickLax<
  *
  * @template {object} TObject - The object
  * @template {DeepKeyOf<TObject>} TKey - The key
+ *
+ * @example
+ * type MyObject = {
+ *   foo: {
+ *     bar: {
+ *       baz: number
+ *     }
+ *     foo: {
+ *       foobar: string
+ *     }
+ *   }
+ * }
+ *
+ * type MyPick = DeepPick<MyObject, 'foo.bar.baz'> // { foo : { bar: { baz: number } } }
+ *
  */
 export type DeepPick<
   TObject extends object,
