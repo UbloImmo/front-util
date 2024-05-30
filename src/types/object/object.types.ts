@@ -10,13 +10,13 @@ import type { DeepKeyOf } from "./keys.types";
 
 export type DeepRequired<T> = T extends object
   ? {
-      [TKey in keyof T]-?: T[TKey];
+      [TKey in keyof T]-?: DeepRequired<T[TKey]>;
     }
   : T;
 
 export type DeepPartial<T> = T extends object
   ? {
-      [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+      [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
 
