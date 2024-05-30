@@ -14,7 +14,10 @@ export const transformObject = <
   TTransformedItem = TObj[keyof TObj & string]
 >(
   object: TObj,
-  itemTransformer: (item: TObj[keyof TObj & string]) => TTransformedItem,
+  itemTransformer: (
+    item: TObj[keyof TObj & string],
+    key: keyof TObj & string
+  ) => TTransformedItem,
   keyTransformer?: (key: keyof TObj & string) => TTransformedKey
 ): typeof keyTransformer extends undefined
   ? {
@@ -27,12 +30,15 @@ export const transformObject = <
     return objectFromEntries(
       objectEntries(object).map(([key, value]) => [
         keyTransformer(key),
-        itemTransformer(value),
+        itemTransformer(value, key),
       ])
     );
   }
   return objectFromEntries(
-    objectEntries(object).map(([key, value]) => [key, itemTransformer(value)])
+    objectEntries(object).map(([key, value]) => [
+      key,
+      itemTransformer(value, key),
+    ])
   );
 };
 
