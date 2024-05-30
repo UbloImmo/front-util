@@ -75,11 +75,17 @@ const isMoreThanTen = (a: Nullish<number>) => {
 
 #### Object generics
 
-- `DeepRequired`
-- `DeepNullish`
-- `DeepNonNullable`
-- `DeepNonOptional`
-- `DeepNonNullish`
+- `KeyOf<TObject, TRestriction>`
+- `DeepKeyOf<TObject, TRestriction>`
+- `DeepRequired<T>`
+- `DeepNullish<T>`
+- `DeepNonNullish<T>`
+- `DeepNullable<T>`
+- `DeepNonNullable<T>`
+- `DeepOptional<T>`
+- `DeepNonOptional<T>`
+- `DeepPickLax<T, TKey>`
+- `DeepPick<TObject, TKey>`
 
 ### Utility functions
 
@@ -97,6 +103,17 @@ const isMoreThanTen = (a: Nullish<number>) => {
 - `isNull()`
 - `isUndefined()`
 - `isNullish()`
+
+#### Object functions
+
+- `objectKeys()`
+- `objectValues()`
+- `objectEntries()`
+- `objectFromEntries()`
+- `transformObject()`
+
+#### Array functions
+- `arrayFilter()`
 
 #### Logger
 
