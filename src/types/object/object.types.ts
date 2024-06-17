@@ -6,7 +6,7 @@ import type {
   Nullable,
   Optional,
 } from "..";
-import type { DeepKeyOf } from "./keys.types";
+import type { DeepKeyOf, KeyOfObject, StringKeyOf } from "./keys.types";
 
 export type DeepRequired<T> = T extends object
   ? {
@@ -59,7 +59,7 @@ export type DeepNonOptional<T> = T extends object
 /**
  * Picks a deep slice of an object
  *
- * @remarks Does not have autocomplete. use {@link DeepPick}
+ * @remarks Does not have autocomplete. Use {@link DeepPick}.
  *
  * @template TObject - The object
  * @template {string | number} TKey - The key
@@ -108,3 +108,67 @@ export type DeepPick<
   TObject extends object,
   TKey extends DeepKeyOf<TObject>
 > = DeepPickLax<TObject, TKey>;
+
+/**
+ * Yields an object's nested value based on the provided deep key.
+ *
+ * @remarks Yields `never` if TObject is not an object
+ * @remarks Uses {@link DeepKeyOf}
+ *
+ * @template TObject - The object
+ * @template {DeepKeyOf<TObject>} TKey - The deep key
+ */
+export type DeepValueOfLax<
+  TObject,
+  TKey extends DeepKeyOf<TObject>
+> = TObject extends object
+  ? TKey extends StringKeyOf<TObject>
+    ? TObject[KeyOfObject<TObject, TKey>]
+    : TKey extends `${infer THead}.${infer TTail}`
+    ? THead extends StringKeyOf<TObject>
+      ? TTail extends DeepKeyOf<TObject[KeyOfObject<TObject, THead>]>
+        ? DeepValueOfLax<TObject[KeyOfObject<TObject, THead>], TTail>
+        : never
+      : never
+    : never
+  : never;
+
+/**
+ * Superset of {@link DeepValueOfLax} with stricter TObject type argument
+ *
+ * @remarks Use this instead of {@link DeepValueOfLax}
+ *
+ * @template TObject - The object
+ * @template {DeepKeyOf<TObject>} TKey - The deep key
+ *
+ * @example
+ * type MyObject = {
+ *   foo: {
+ *     bar: {
+ *       baz: number;
+ *     };
+ *     foobar: string[];
+ *     baz: {
+ *      foobar: boolean;
+ *     }[];
+ *   };
+ * };
+ * type NestedNumber = DeepValueOf<MyObject, "foo.bar.baz">; // number
+ * type NestedArray = DeepValueOf<MyObject, "foo.foobar">; // string[]
+ * type NestedString = DeepValueOf<MyObject, "foo.foobar.123">; // string
+ * type NestedBoolean = DeepValueOf<MyObject, "foo.baz.0.foobar">; // boolean
+ */
+export type DeepValueOf<
+  TObject extends object,
+  TKey extends DeepKeyOf<TObject>
+> = DeepValueOfLax<TObject, TKey>;
+
+export type DeepKeyOfType<TObject, TType> = TObject extends object
+  ? DeepKeyOf<TObject> extends infer TDeepKey
+    ? TDeepKey extends DeepKeyOf<TObject>
+      ? DeepValueOf<TObject, TDeepKey> extends TType
+        ? TDeepKey
+        : never
+      : never
+    : never
+  : never;

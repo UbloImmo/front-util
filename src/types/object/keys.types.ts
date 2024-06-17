@@ -5,13 +5,35 @@ import type { Primitives } from "..";
  *
  * @remarks Returns never if T is not an object
  *
- * @template T - The object
+ * @template TObject - The object
  * @template {Primitives} [TRestriction = string] - The key restriction
  */
 export type KeyOf<
   TObject,
-  TRestriction extends Primitives = string
+  TRestriction extends Primitives = string | number
 > = keyof TObject & TRestriction;
+
+/**
+ * Superset of {@link KeyOf} that allows string indexes for arrays
+ *
+ * @template TObject - The object
+ * @template {Primitives} [TRestriction = string] - The key restriction
+ */
+export type StringKeyOf<
+  TObject,
+  TRestriction extends Primitives = string | number
+> = `${KeyOf<TObject, TRestriction>}` | KeyOf<TObject, TRestriction>;
+
+/**
+ * Used to index objects with {@link StringKeyOf} keys
+ *
+ * @template TObject - The object
+ * @template {StringKeyOf<TObject>} TKey - The string key
+ */
+export type KeyOfObject<
+  TObject,
+  TKey extends StringKeyOf<TObject>
+> = TKey extends `${number}` ? number & keyof TObject : TKey & keyof TObject;
 
 /**
  * Extracts any top-level and/or deep key of an object
@@ -26,9 +48,18 @@ export type DeepKeyOf<
   TKeyRestriction extends Primitives = string | number
 > = TObject extends object
   ? {
-      [K in KeyOf<TObject, TKeyRestriction>]: TObject[K] extends object
-        ? `${K}.${DeepKeyOf<TObject[K]>}` | K
-        : K;
+      [K in StringKeyOf<TObject, TKeyRestriction>]: TObject[KeyOfObject<
+        TObject,
+        K
+      >] extends object
+        ?
+            | `${K}.${DeepKeyOf<
+                TObject[KeyOfObject<TObject, K>],
+                TKeyRestriction
+              >}`
+            | K
+            | `${K}`
+        : K | `${K}`;
     }[KeyOf<TObject, TKeyRestriction>]
   : never;
 
