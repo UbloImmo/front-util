@@ -2,7 +2,7 @@
   "name": "@ubloimmo/front-util",
   "description": "Utility types and functions for use in other libraries and satellites",
   "private": false,
-  "version": "0.0.16",
+  "version": "0.0.17",
   "module": "lib/index.ts",
   "main": "lib/index.ts",
   "files": [
