@@ -2,7 +2,7 @@
   "name": "@ubloimmo/front-util",
   "description": "Utility types and functions for use in other libraries and satellites",
   "private": false,
-  "version": "0.0.17",
+  "version": "0.0.18",
   "module": "lib/index.ts",
   "main": "lib/index.ts",
   "files": [
@@ -27,10 +27,10 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^2.8.7",
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.4"
   },
   "peerDependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "build": "./src/scripts/build.sh",

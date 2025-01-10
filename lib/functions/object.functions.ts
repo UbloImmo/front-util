@@ -195,7 +195,10 @@ function deepValueOfLax<TObject, TKey extends DeepKeyOf<TObject>>(
   const tail = tails.join(".") as DeepKeyOf<typeof nestedOject>;
   // both head and tail exist,
   // recursively get deeper value with tail as deep key of nested object
-  return deepValueOfLax(nestedOject, tail, safe) as DeepValueOfLax<TObject, TKey>;
+  return deepValueOfLax(nestedOject, tail, safe) as DeepValueOfLax<
+    TObject,
+    TKey
+  >;
 }
 
 /**
