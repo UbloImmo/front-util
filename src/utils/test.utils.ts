@@ -65,12 +65,13 @@ export const fakeFetchFactory = async (
     isUndefined(object) ? undefined : await JSON.parse(await text());
   const formData = async () => new FormData();
   const arrayBuffer = async () => new ArrayBuffer(0);
+  const bytes = async () => new Uint8Array(0);
   const blob = async () => new Blob();
   // define fake response properties
   const headers = new Headers(givenHeaders);
   const bodyUsed = !!object;
   // build static response data
-  const responseBase: Omit<Response, "clone" | "url"> = {
+  const responseBase: Omit<Response, "clone" | "url" | "bytes"> = {
     ...responseData,
     json,
     text,
@@ -86,7 +87,7 @@ export const fakeFetchFactory = async (
   return async (
     requestInfo: FakeRequestInfo,
     _requestInit?: Optional<FakeRequestInit>
-  ) => {
+  ): Promise<Response> => {
     // use default url if none is provided when fn is called
     const url = isString(requestInfo)
       ? requestInfo
@@ -96,12 +97,14 @@ export const fakeFetchFactory = async (
       ...responseBase,
       url,
       clone,
+      bytes,
     });
     // define fake response
     const response: Response = {
       ...responseBase,
       url,
       clone,
+      bytes,
     };
     // actually return fake response
     return response;
