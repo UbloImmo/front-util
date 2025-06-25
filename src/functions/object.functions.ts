@@ -4,8 +4,19 @@ import type {
   KeyOf,
   DeepValueOf,
   Optional,
+  Apply,
+  DeepTransformKeys,
+  DeepMap,
+  ItemTransformerHKT,
+  KeyTransformerHKT,
+  Assume,
 } from "../types";
-import { isObject, isString } from "./predicate.functions";
+import {
+  isFunction,
+  isObject,
+  isString,
+  isStringObject,
+} from "./predicate.functions";
 
 /**
  * Transforms an object by applying a given item transformer function to each value,
@@ -251,4 +262,121 @@ export function deepValueOf<
   TKey extends DeepKeyOf<TObject>
 >(object: TObject, key: TKey, safe?: boolean) {
   return deepValueOfLax(object, key, safe);
+}
+
+/**
+ * A HKT that does not transform the item value
+ */
+export interface NoItemTransformer extends ItemTransformerHKT {
+  new: (value: Assume<this["_1"], unknown>) => typeof value;
+}
+
+/**
+ * A HKT that does not transform the key
+ */
+export interface NoKeyTransformer extends KeyTransformerHKT {
+  new: (key: Assume<this["_1"], string>) => typeof key;
+}
+
+/**
+ * Transforms an object by applying a given item transformer function to each value,
+ * and an optional key transformer function to each key.
+ *
+ * @template TObj - The type of the object.
+ * @template {ItemTransformerHKT} [TItemTransformer = NoItemTransformer] - The type of the item transformer function.
+ * @template {KeyTransformerHKT} [TKeyTransformer = NoKeyTransformer] - The type of the key transformer function.
+ * @param {TObj} object - The object to be transformed.
+ * @param {TItemTransformer} itemTransformer - The function that transforms each item value.
+ * @param {TKeyTransformer} keyTransformer - The optional function that transforms each key.
+ * @param {boolean} [applyToNestedObjects=false] - Whether to apply the item transformation to nested objects. Key transformation always applies to nested objects.
+ * @returns {DeepMap<DeepTransformKeys<TObj, TKeyTransformer>, TItemTransformer, TApplyToNestedObjects>} The transformed object.
+ *
+ * @example
+ * const obj = {
+ *   number: 2,
+ *   string: "hello",
+ *   obj: {
+ *     array: [1, 2, 3],
+ *   },
+ * } as const;
+ *
+ * interface ItemTransformer extends ItemTransformerHKT {
+ *   new: (value: Assume<this["_1"], unknown>) => {
+ *     raw: typeof value;
+ *     wrapped: [typeof value];
+ *   };
+ * }
+ *
+ * interface KeyTransformer extends KeyTransformerHKT {
+ *   new: (key: Assume<this["_1"], string>) => `key${typeof key}`;
+ * }
+ *
+ * const transformed = deepTransformObject<
+ *   typeof obj,
+ *   ItemTransformer,
+ *   KeyTransformer
+ * >(
+ *   obj,
+ *   (value) => ({ raw: value, wrapped: [value] }),
+ *   (key) => `key${key}`,
+ *   false
+ * );
+ * console.log(transformed.keyobj.keyarray) // { raw: [1, 2, 3], wrapped: [ [1, 2, 3] ] }
+ */
+export function deepTransformObject<
+  TObj extends Record<string, unknown>,
+  TItemTransformer extends ItemTransformerHKT = NoItemTransformer,
+  TKeyTransformer extends KeyTransformerHKT = NoKeyTransformer,
+  TApplyToNestedObjects extends boolean = false
+>(
+  object: TObj,
+  itemTransformer: TItemTransformer["new"] = (value) => value,
+  keyTransformer: TKeyTransformer["new"] = (key) => key,
+  applyToNestedObjects?: TApplyToNestedObjects
+): DeepMap<
+  DeepTransformKeys<TObj, TKeyTransformer>,
+  TItemTransformer,
+  TApplyToNestedObjects
+> {
+  return objectFromEntries(
+    objectEntries(object).map(([key, value]) => {
+      const transformedKey = keyTransformer(key) as Apply<
+        TKeyTransformer,
+        typeof key
+      >;
+      if (isFunction(value))
+        return [
+          transformedKey,
+          value as Apply<TItemTransformer, typeof value, typeof key>,
+        ];
+      const transformedValue = isStringObject(value)
+        ? applyToNestedObjects
+          ? itemTransformer(
+              deepTransformObject(
+                value,
+                itemTransformer,
+                keyTransformer,
+                applyToNestedObjects
+              ),
+              key
+            )
+          : deepTransformObject(
+              value,
+              itemTransformer,
+              keyTransformer,
+              applyToNestedObjects
+            )
+        : (itemTransformer(value, key) as Apply<
+            TItemTransformer,
+            typeof value,
+            typeof key
+          >);
+
+      return [transformedKey, transformedValue] as const;
+    })
+  ) as DeepMap<
+    DeepTransformKeys<TObj, TKeyTransformer>,
+    TItemTransformer,
+    TApplyToNestedObjects
+  >;
 }

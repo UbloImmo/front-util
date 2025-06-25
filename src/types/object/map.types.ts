@@ -1,3 +1,5 @@
+import type { Apply, Assume, HKT } from "../global";
+
 /**
  * An object that must contain all keys in TKeys,
  * where all keys in TKeys must match TValue's types
@@ -30,3 +32,90 @@ export type Replace<
     : {
         [Key in TSourceKey]: TTarget[TTargetKey & keyof TTarget & string];
       });
+
+/**
+ * Maps all first-level values of an object using a HKT
+ *
+ * @template TObject - The object
+ * @template {HKT} TMapFn - The HKT
+ *
+ * @example
+ * interface ToNullish extends HKT {
+ *   new: (value: Assume<this["_1"], unknown>) => Nullish<typeof value>;
+ * }
+ * type Obj = {
+ *   number: number;
+ * };
+ *
+ * const nullishObj: Map<Obj, ToNullish> = {
+ *   number: null,
+ * };
+ */
+export type Map<TObject extends object, TMapFn extends HKT> = {
+  [TKey in keyof TObject]: Apply<TMapFn, TKey>;
+};
+
+/**
+ * Maps all (first-level and nested) values of an object using a HKT
+ *
+ * @template TObject - The object
+ * @template {HKT} TMapFn - The HKT
+ * @template {boolean} [TApplyToNestedObjects = false] - Whether to apply the map to nested objects, or only their values
+ *
+ * @example
+ * interface ToNullable extends HKT {
+ *   new: (value: Assume<this["_1"], unknown>) => Nullable<typeof value>;
+ * }
+ * type Obj = {
+ *   number: number;
+ *   obj: {
+ *     string: string;
+ *   }
+ * };
+ * // nested objects are not converted, only their properties
+ * const a: DeepMap<Obj, ToNullable> = {
+ *   number: null,
+ *   obj: {
+ *     string: null,
+ *   }
+ * }
+ * // nested objects are also converted
+ * const b: DeepMap<Obj, ToNullable, true> = {
+ *   number: null,
+ *   obj: null,
+ * }
+ */
+export type DeepMap<
+  TObject extends Record<string, unknown>,
+  TMapFn extends HKT,
+  TApplyToNestedObjects extends boolean = false
+> = {
+  [TKey in keyof TObject]: TObject[TKey] extends Record<string, unknown>
+    ? TApplyToNestedObjects extends true
+      ? Apply<
+          TMapFn,
+          DeepMap<TObject[TKey], TMapFn, TApplyToNestedObjects>,
+          TKey
+        >
+      : DeepMap<TObject[TKey], TMapFn, TApplyToNestedObjects>
+    : Apply<TMapFn, TObject[TKey], TKey>;
+};
+
+/**
+ * Default HKT for transforming object values.
+ * Please extend your own HKTs from this type.
+ */
+export interface ItemTransformerHKT extends HKT {
+  new: (
+    item: Assume<this["_1"], unknown>,
+    key: Assume<this["_2"], string>
+  ) => unknown;
+}
+
+/**
+ * Default HKT for transforming object keys.
+ * Please extend your own HKTs from this type.
+ */
+export interface KeyTransformerHKT extends HKT {
+  new: (key: Assume<this["_1"], string>) => string;
+}

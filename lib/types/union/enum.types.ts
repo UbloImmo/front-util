@@ -21,3 +21,22 @@ export type EnumExtension<
   | (TExtension extends string[] | readonly string[]
       ? Enum<TExtension>
       : TExtension);
+
+/**
+ * Converts a tuple to a union of its elements
+ * @template {unknown[] | [unknown, ...unknown[]]} TTuple
+ * @param {TTuple} TTuple - Tuple to convert to union
+ * @returns {TTuple[number]}
+ * @example
+ * type A = TupleToUnion<[1, 2, 3]>; // 1 | 2 | 3
+ * const a: A = 1;
+ */
+export type TupleToUnion<TTuple extends [unknown, ...unknown[]] | unknown[]> = TTuple extends [
+  infer TStart,
+  ...infer TRest
+]
+  ? TStart | TupleToUnion<TRest>
+  : TTuple extends unknown[]
+  ? TTuple[number]
+  : never;
+     
