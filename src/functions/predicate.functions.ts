@@ -60,6 +60,14 @@ export const isArray = ((value: unknown) =>
   isObject(value) && Array.isArray(value)) as Predicate<Array<unknown>>;
 
 /**
+ * Predicate typescript function that checks whether the value corresponds to a string object
+ * @param {unknown} value unknown value to check
+ * @returns {boolean} true if the value corresponds to a string object
+ */
+export const isStringObject = ((value: unknown) =>
+  isObject(value) && !isArray(value)) as Predicate<Record<string, unknown>>;
+
+/**
  * Predicate typescript function that checks whether the value is null
  * @param {unknown} value unknown value to check
  * @returns {boolean} true if the value is null

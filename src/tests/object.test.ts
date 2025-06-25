@@ -7,12 +7,20 @@ import {
 } from "./test.defaults";
 import {
   arrayFilter,
+  capitalize,
+  deepTransformObject,
   isFunction,
   objectKeys,
   objectValues,
   transformObject,
+  type NoItemTransformer,
 } from "../functions";
-import { GenericFn } from "../types";
+import {
+  GenericFn,
+  type Assume,
+  type ItemTransformerHKT,
+  type KeyTransformerHKT,
+} from "../types";
 
 const testObjectTransformer = (
   label: string,
@@ -80,6 +88,73 @@ describe("object functions", () => {
       ) => (!!item && index > 30) || index * array.length < 452;
       // compare arrayFilter against origin fn
       expect(arrayFilter(array, filterFn)).toEqual([...array].filter(filterFn));
+    });
+  });
+
+  describe("deepTransformObject", () => {
+    interface ItemTransformer extends ItemTransformerHKT {
+      new: (value: Assume<this["_1"], unknown>) => null;
+    }
+    it("should transform an object's values to null", () => {
+      const transformed = deepTransformObject<
+        typeof defaultTestValues,
+        ItemTransformer,
+        KeyTransformerHKT,
+        true
+      >(
+        defaultTestValues,
+        () => null,
+        (value) => value,
+        true
+      );
+      expect(transformed).toEqual(
+        transformObject(defaultTestValues, () => null)
+      );
+    });
+
+    it("should preserve nested objects by default", () => {
+      const transformed = deepTransformObject<
+        typeof defaultTestValues,
+        ItemTransformer
+      >(defaultTestValues, () => null);
+
+      expect(transformed).toEqual({
+        ...transformObject(defaultTestValues, () => null),
+        object: {
+          key: null,
+        },
+      });
+    });
+
+    it("should transform an object's keys", () => {
+      interface KeyTransformer extends KeyTransformerHKT {
+        new: (
+          key: Assume<this["_1"], string>
+        ) => `key${Capitalize<typeof key>}`;
+      }
+      const transformed = deepTransformObject<
+        typeof defaultTestValues,
+        NoItemTransformer,
+        KeyTransformer
+      >(
+        defaultTestValues,
+        (value) => value,
+        (key): `key${Capitalize<typeof key>}` => `key${capitalize(key)}`
+      );
+      expect(transformed).toEqual({
+        keyString: defaultTestValues.string,
+        keyNumber: defaultTestValues.number,
+        keyInt: defaultTestValues.int,
+        keyFloat: defaultTestValues.float,
+        keyTrue: defaultTestValues.true,
+        keyFalse: defaultTestValues.false,
+        keyNull: defaultTestValues.null,
+        keyUndefined: defaultTestValues.undefined,
+        keyArray: defaultTestValues.array,
+        keyObject: {
+          keyKey: defaultTestValues.object.key,
+        },
+      });
     });
   });
 });
